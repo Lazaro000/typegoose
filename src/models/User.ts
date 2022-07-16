@@ -1,5 +1,11 @@
-import { prop, getModelForClass, Ref } from "@typegoose/typegoose";
+import {
+  prop,
+  getModelForClass,
+  Ref,
+  DocumentType,
+} from "@typegoose/typegoose";
 import { Role } from "./Role";
+import bcrypt from "bcryptjs";
 
 export class User {
   @prop({ required: true }) // mongoose
@@ -15,7 +21,11 @@ export class User {
   password: string;
 
   @prop({ ref: () => Role })
-  roles: Ref<Role>;
+  roles: Ref<Role>[];
+
+  public async encryptPassword(this: DocumentType<User>, password: string) {
+    this.password = await bcrypt.hash(password, 10);
+  }
 }
 
 const UserModel = getModelForClass(User);

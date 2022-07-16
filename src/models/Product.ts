@@ -1,5 +1,10 @@
 import { Comment } from "./Comment";
-import { getModelForClass, prop, Ref } from "@typegoose/typegoose";
+import {
+  getModelForClass,
+  prop,
+  Ref,
+  ReturnModelType,
+} from "@typegoose/typegoose";
 import { nanoid } from "nanoid";
 import { User } from "./User";
 
@@ -24,6 +29,13 @@ export class Product {
 
   @prop({ type: () => User })
   owner: Ref<User>;
+
+  public static async findByName(
+    this: ReturnModelType<typeof Product>,
+    name: string
+  ) {
+    return this.find({ name });
+  }
 }
 
 const ProductModel = getModelForClass(Product);
