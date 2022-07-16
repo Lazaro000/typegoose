@@ -1,5 +1,6 @@
 import { connect } from "mongoose";
 import ProductModel from "./models/Product";
+import RoleModel from "./models/Role";
 import UserModel from "./models/User";
 
 async function connectDB() {
@@ -67,7 +68,58 @@ async function executeQueries() {
     url: "product-01",
     tags: ["laptop", "gaming", "razer"],
     comments: [{ text: "awesome product" }, { text: "product x" }],
+    owner: "624468c1abad6548541efc24",
   });
+
+  /**
+   * Find a Product
+   */
+  const product2 = await ProductModel.findById(id).populate("owner");
+  console.log("Product found:", product2);
+
+  /**
+   * Create some roles
+   */
+  const results = await RoleModel.insertMany([
+    { name: "admin" },
+    { name: "guest" },
+    { name: "user" },
+  ]);
+  console.log(results);
+
+  /**
+   * * Create a user with role
+   */
+  const newUser = await UserModel.create({
+    firstname: "John",
+    lastname: "Doe",
+    password: "123456",
+    email: "john@email.com",
+    role: ["6243cc2ef04e53a3402567ae", "6243cc2ef04e53a3402567af"],
+  });
+  console.log(newUser);
+
+  const user10 = await ProductModel.findById(
+    "6243cea4e5e18ed01a35fe77"
+  ).populate("roles", "name -_id");
+  console.log(user10);
+
+  const product4 = await new ProductModel({
+    name: "mouse",
+    price: 300,
+    url: "mouse-gaming",
+    tags: ["electronics", "computer"],
+    owner: "6243cc1aeb3466f4226251a5",
+    comments: [
+      {
+        text: "this is a comment",
+      },
+      {
+        text: "awesome product",
+      },
+    ],
+  });
+  console.log(product4);
 }
 
 executeQueries();
