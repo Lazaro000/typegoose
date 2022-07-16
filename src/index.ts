@@ -1,4 +1,5 @@
 import { connect } from "mongoose";
+import ProductModel from "./models/Product";
 import UserModel from "./models/User";
 
 async function connectDB() {
@@ -56,6 +57,17 @@ async function executeQueries() {
   console.log("User deleted:", user7);
   const user8 = await UserModel.deleteMany({ email: "joedoe@gmail.com" });
   console.log("Users deleted:", user8);
+
+  /**
+   * * Create a Product
+   */
+  const product = await ProductModel.create({
+    name: "laptop",
+    price: 30,
+    url: "product-01",
+    tags: ["laptop", "gaming", "razer"],
+    comments: [{ text: "awesome product" }, { text: "product x" }],
+  });
 }
 
 executeQueries();
