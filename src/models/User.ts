@@ -3,10 +3,16 @@ import {
   getModelForClass,
   Ref,
   DocumentType,
+  pre,
 } from "@typegoose/typegoose";
 import { Role } from "./Role";
 import bcrypt from "bcryptjs";
 
+@pre<User>("save", async function () {
+  console.log("Hook - Este es el usuario guardado", this.firstname);
+
+  this.encryptPassword(User, this.password);
+})
 export class User {
   @prop({ required: true }) // mongoose
   firstname: string; // typescript
